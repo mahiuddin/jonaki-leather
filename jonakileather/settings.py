@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +23,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-396m+x2$t=oq51b+n!(1qok#+&x&lz4@@l%tc1swt*lev(&p73'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+METABASE_SECRET_KEY = os.getenv('METABASE_SECRET_KEY')
+METABASE_SITE_URL = os.getenv('METABASE_SITE_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['95.217.7.154', '127.0.0.1', 'localhost', 'jonaki.insafee.com','www.jonaki.insafee.com']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://jonakileather.com',
+    'https://www.jonakileather.com',
+    'https://95.217.7.154:3000',
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+AUTH_USER_MODEL = 'auth.User'
 
 # Application definition
 
@@ -76,12 +91,12 @@ WSGI_APPLICATION = 'jonakileather.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jonakileather',
-        'USER': 'jonaki_admin',
-        'PASSWORD': 'Bangladesh1971!@',
-        'HOST': 'localhost',  # or your DB host
-        'PORT': '5432',       # default PostgreSQL port
+        'ENGINE': os.getenv('ENGINE'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -121,6 +136,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
